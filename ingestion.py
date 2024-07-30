@@ -2,26 +2,26 @@ import os
 
 import httpx
 from dotenv import load_dotenv
-from langchain_community.document_loaders import TextLoader
-from langchain_text_splitters import CharacterTextSplitter
-from langchain_openai.embeddings import AzureOpenAIEmbeddings
+from langchain_community.document_loaders import ReadTheDocsLoader, PyPDFLoader
+from langchain_openai import AzureOpenAIEmbeddings
 from langchain_pinecone import PineconeVectorStore
+from langchain_text_splitters import RecursiveCharacterTextSplitter, CharacterTextSplitter
 
 
-if __name__ == '__main__':
-    load_dotenv()
+def ingest_docs():
+    # https://www.singstat.gov.sg/standards/standards-and-classifications/ssoc taking Complete report (SSOC 2024)
+    pdf_path = "docs/ssoc2024a-detailed-definitions.pdf"
+    loader = PyPDFLoader(file_path=pdf_path)
+    documents = loader.load()
+    text_splitter = CharacterTextSplitter(
+        chunk_size=1000, chunk_overlap=30, separator="\n"
+    )
+    docs = text_splitter.split_documents(documents=documents)
 
-    loader = TextLoader("./mediumblog1.txt")
-    document = loader.load()
+    print(f"Going to add {len(documents)} documents to Pinecone")
 
-    text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
-    texts = text_splitter.split_documents(document)
-    print(f"created {len(texts)} chunks")
-
-    # Define the proxy URL with the correct scheme
     proxy_url = "http://proxy.ci.mcf.sh:3128"
 
-    # Define the client with proxy settings
     http_client = httpx.Client(proxies={
         "http://": proxy_url,
         "https://": proxy_url,
@@ -35,4 +35,9 @@ if __name__ == '__main__':
         http_client=http_client,
     )
 
-    PineconeVectorStore.from_documents(texts, embeddings, index_name=os.environ["PINECONE_INDEX_NAME"])
+    PineconeVectorStore.from_documents(docs, embeddings, index_name=os.environ["PINECONE_INDEX_NAME"])
+
+
+if __name__ == '__main__':
+    load_dotenv()
+    ingest_docs()

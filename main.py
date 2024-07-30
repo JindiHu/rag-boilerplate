@@ -43,7 +43,16 @@ if __name__ == "__main__":
         callbacks=[CallbackHandler()]
     )
 
-    query = "what is Pinecone in machine learning?"
+    query = """
+        I am currently a product owner and i want to apply for a sales manager job posting. These are my skills 
+        gap: sales process, b2b, sales management, selling, account management, business development, key account 
+        management, customer relationships, new business development, negotiation, direct sales, customer success. These 
+        are courses recommended to me: Digital Marketing by Ngee Ann Poly, Logistics Solutions Marketing by Singapore 
+        Chinese Chamber Institute and Sales Performance Strategy by Pioneer Training & Consultancy. I want to transit 
+        into a Sales Manager within 3 months. Can you help me strategies what is my next and subsequent steps and present 
+        it in a specific timeline map? Breakdown the steps into monthly milestones. Think through the reasoning for each 
+        step you recommend.
+    """
 
     # prompt = PromptTemplate.from_template(query)
     #

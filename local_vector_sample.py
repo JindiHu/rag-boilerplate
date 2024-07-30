@@ -18,7 +18,7 @@ from util import format_docs
 if __name__ == "__main__":
     print("hi")
     load_dotenv()
-    pdf_path = "./G2C0006-CCP_Applicant_Guide_V3.pdf"
+    pdf_path = "docs/G2C0006-CCP_Applicant_Guide_V3.pdf"
     loader = PyPDFLoader(file_path=pdf_path)
     documents = loader.load()
     text_splitter = CharacterTextSplitter(
